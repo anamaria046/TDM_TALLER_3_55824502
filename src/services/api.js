@@ -22,7 +22,6 @@ export async function fetchPokemon(id) {
     }catch (error){
         console.error(error);
         return null;
-
     }
     
 }
