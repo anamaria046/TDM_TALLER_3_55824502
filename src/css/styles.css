@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Cinzel:wght@700&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --card-bg: #ffffff;
+    --card-accent: #3b4cca;
+    --card-glow: rgba(59, 76, 202, 0.4);
+    --font-main: 'Poppins', sans-serif;
+    --font-heading: 'Cinzel', serif;
+}
+
+body {
+    font-family: var(--font-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg-grad, radial-gradient(circle at center, #1e293b 0%, #0f172a 100%));
+    padding: 20px;
+    overflow-x: hidden;
+    transition: background 0.5s ease;
+}
+
+/* --- TARJETA Y BARAJA--- */
+.poke-card {
+    position: relative;
+    width: 320px;
+    background: var(--card-bg);
+    border-radius: 18px;
+    padding: 22px 20px 24px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px var(--card-glow),
+                inset 0 0 0 3px rgba(255, 255, 255, 0.8), inset 0 0 0 5px var(--card-accent);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "sound id" "img img" "name name" "types types" "prev next";
+    align-items: center;
+    text-align: center;
+    z-index: 10;
+    transform: rotate(0deg); /* Carta frontal completamente derecha */
+    transition: transform 0.3s ease, box-shadow 0.4s ease;
+}
+
+/* Cartas traseras apiladas en abanicp */
+.poke-card::before, .poke-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    border-radius: 18px;
+    background: #ffffff;
+    border: 3px solid var(--card-accent);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease;
+}
+
+.poke-card::before { z-index: -2; transform: rotate(-3.5deg) translate(-10px, 4px); filter: brightness(0.92); }
+.poke-card::after { z-index: -1; transform: rotate(3.5deg) translate(10px, 4px); filter: brightness(0.96); }
+
+.poke-card:hover { transform: translateY(-8px); box-shadow: 0 22px 45px rgba(0,0,0,0.6), 0 0 35px var(--card-glow); }
+.poke-card:hover::before { transform: rotate(-6deg) translate(-18px, 6px); }
+.poke-card:hover::after { transform: rotate(6deg) translate(18px, 6px); }
+
+/* --- ELEMENTOS DE LA CARTA --- */
+#b-sound { grid-area: sound; justify-self: start; }
+.b-sound {
+    background: #ffffff; border: 1px solid var(--card-accent);
+    border-radius: 50%; width: 32px; height: 32px; font-size: 0.9rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.b-sound:hover { transform: scale(1.15); box-shadow: 0 4px 10px var(--card-glow); }
+.b-sound:active { transform: scale(0.95); }
+
+#pokemon-id {
+    grid-area: id; justify-self: end;
+    font-size: 0.85rem; font-weight: 800; color: var(--card-accent);
+    background: rgba(255,255,255,0.9); padding: 2px 10px; border-radius: 10px;
+    border: 1px solid var(--card-accent);
+}
+
+#pokemon-name {
+    grid-area: name; font-family: var(--font-heading); font-size: 1.55rem;
+    color: #1e293b; margin: 6px 0; text-transform: capitalize;
+}
+
+.pokemon-img {
+    grid-area: img; justify-self: center; width: 180px; height: 180px;
+    object-fit: contain; margin: 10px 0; cursor: pointer;
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3));
+    animation: idleFloat 3.5s ease-in-out infinite;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+@keyframes idleFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+
+.pokemon-img:hover {
+    animation-play-state: paused; transform: scale(1.15) translateY(-8px);
+    filter: drop-shadow(0 0 20px var(--card-glow));
+}
+.pokemon-img:active { transform: scale(0.95); }
+
+.types { grid-area: types; display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; }
+.type {
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    padding: 4px 12px; border-radius: 15px; color: #fff; background: var(--card-accent);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.b-prev, .b-next {
+    padding: 9px 18px; font-family: var(--font-main); font-size: 0.85rem; font-weight: 700;
+    color: #fff; background: linear-gradient(135deg, var(--card-accent), #0f172a);
+    border: none; border-radius: 20px; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: all 0.25s ease; margin: 0 4px;
+}
+.b-prev { grid-area: prev; justify-self: end; }
+.b-next { grid-area: next; justify-self: start; }
+.b-prev:hover, .b-next:hover { transform: translateY(-2px); box-shadow: 0 6px 16px var(--card-glow); }
+.b-prev:active, .b-next:active { transform: translateY(1px); }
+
+/* --- COLORES DINÁMICOS POR TIPO (:has) --- */
+body:has(.type.fire) { --bg-grad: radial-gradient(circle at center, #3a1510, #0f172a); }
+.poke-card:has(.type.fire) { --card-accent: #ff4500; --card-glow: rgba(255, 69, 0, 0.5); }
+.type.fire { background: linear-gradient(135deg, #ff4500, #ff8c00); }
+
+body:has(.type.water) { --bg-grad: radial-gradient(circle at center, #0f2b48, #0f172a); }
+.poke-card:has(.type.water) { --card-accent: #0088ff; --card-glow: rgba(0, 136, 255, 0.5); }
+.type.water { background: linear-gradient(135deg, #0088ff, #00c6ff); }
+
+body:has(.type.grass) { --bg-grad: radial-gradient(circle at center, #113821, #0f172a); }
+.poke-card:has(.type.grass) { --card-accent: #2ecc71; --card-glow: rgba(46, 204, 113, 0.5); }
+.type.grass { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+
+body:has(.type.electric) { --bg-grad: radial-gradient(circle at center, #3a3310, #0f172a); }
+.poke-card:has(.type.electric) { --card-accent: #f39c12; --card-glow: rgba(241, 196, 15, 0.6); }
+.type.electric { background: linear-gradient(135deg, #f1c40f, #f39c12); color: #1e293b; }
+
+body:has(.type.poison) { --bg-grad: radial-gradient(circle at center, #2e123a, #0f172a); }
+.poke-card:has(.type.poison) { --card-accent: #9b59b6; --card-glow: rgba(155, 89, 182, 0.5); }
+.type.poison { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+
+body:has(.type.psychic) { --bg-grad: radial-gradient(circle at center, #3d102a, #0f172a); }
+.poke-card:has(.type.psychic) { --card-accent: #e84393; --card-glow: rgba(232, 67, 147, 0.5); }
+.type.psychic { background: linear-gradient(135deg, #fd79a8, #e84393); }
+
+body:has(.type.ice) { --bg-grad: radial-gradient(circle at center, #103444, #0f172a); }
+.poke-card:has(.type.ice) { --card-accent: #00cec9; --card-glow: rgba(116, 185, 255, 0.5); }
+.type.ice { background: linear-gradient(135deg, #74b9ff, #00cec9); }
+
+body:has(.type.dragon) { --bg-grad: radial-gradient(circle at center, #251648, #0f172a); }
+.poke-card:has(.type.dragon) { --card-accent: #6c5ce7; --card-glow: rgba(108, 92, 231, 0.5); }
+.type.dragon { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+
+body:has(.type.ghost) { --bg-grad: radial-gradient(circle at center, #1e0f33, #0f172a); }
+.poke-card:has(.type.ghost) { --card-accent: #4834d4; --card-glow: rgba(75, 40, 115, 0.6); }
+.type.ghost { background: linear-gradient(135deg, #686de0, #4834d4); }
+
+body:has(.type.ground) { --bg-grad: radial-gradient(circle at center, #3a2214, #0f172a); }
+.poke-card:has(.type.ground) { --card-accent: #d35400; --card-glow: rgba(225, 112, 85, 0.5); }
+.type.ground { background: linear-gradient(135deg, #e17055, #d35400); }
+
+body:has(.type.rock) { --bg-grad: radial-gradient(circle at center, #352c15, #0f172a); }
+.poke-card:has(.type.rock) { --card-accent: #b28c32; --card-glow: rgba(178, 140, 50, 0.5); }
+.type.rock { background: linear-gradient(135deg, #ccae62, #b28c32); }
+
+body:has(.type.bug) { --bg-grad: radial-gradient(circle at center, #283310, #0f172a); }
+.poke-card:has(.type.bug) { --card-accent: #8d9912; --card-glow: rgba(168, 184, 32, 0.5); }
+.type.bug { background: linear-gradient(135deg, #a8b820, #8d9912); }
+
+body:has(.type.fighting) { --bg-grad: radial-gradient(circle at center, #3d1410, #0f172a); }
+.poke-card:has(.type.fighting) { --card-accent: #c0392b; --card-glow: rgba(192, 57, 43, 0.5); }
+.type.fighting { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+
+body:has(.type.steel) { --bg-grad: radial-gradient(circle at center, #232c33, #0f172a); }
+.poke-card:has(.type.steel) { --card-accent: #7f8c8d; --card-glow: rgba(149, 165, 166, 0.5); }
+.type.steel { background: linear-gradient(135deg, #95a5a6, #7f8c8d); }
+
+body:has(.type.fairy) { --bg-grad: radial-gradient(circle at center, #3d1a29, #0f172a); }
+.poke-card:has(.type.fairy) { --card-accent: #ff7675; --card-glow: rgba(255, 182, 193, 0.6); }
+.type.fairy { background: linear-gradient(135deg, #ffb6c1, #ff7675); }
+
+body:has(.type.dark) { --bg-grad: radial-gradient(circle at center, #15161e, #050608); }
+.poke-card:has(.type.dark) { --card-accent: #2d3436; --card-glow: rgba(80, 80, 90, 0.6); }
+.type.dark { background: linear-gradient(135deg, #636e72, #2d3436); }
+
+body:has(.type.flying) { --bg-grad: radial-gradient(circle at center, #172445, #0f172a); }
+.poke-card:has(.type.flying) { --card-accent: #70a1ff; --card-glow: rgba(112, 161, 255, 0.5); }
+.type.flying { background: linear-gradient(135deg, #70a1ff, #1e90ff); }
+
+body:has(.type.normal) { --bg-grad: radial-gradient(circle at center, #282a30, #0f172a); }
+.poke-card:has(.type.normal) { --card-accent: #b2bec3; --card-glow: rgba(178, 190, 195, 0.5); }
+.type.normal { background: linear-gradient(135deg, #b2bec3, #636e72); }
+
+/* --- MODAL DE ESTADÍSTICAS --- */
+.modal {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(6px);
+    display: flex; justify-content: center; align-items: center; z-index: 1000;
+    transition: opacity 0.25s ease;
+}
+.modal.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.modal-content {
+    position: relative; width: 90%; max-width: 380px; background: #fff;
+    border-radius: 20px; padding: 24px; text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 25px var(--card-glow), inset 0 0 0 4px var(--card-accent);
+}
+
+#close-modal {
+    position: absolute; top: 12px; right: 15px; width: 28px; height: 28px;
+    line-height: 24px; font-size: 1.3rem; font-weight: 700; color: #64748b;
+    background: #e2e8f0; border-radius: 50%; cursor: pointer; transition: 0.2s;
+}
+#close-modal:hover { color: #fff; background: #ef4444; }
+
+#modal-name { font-family: var(--font-heading); font-size: 1.6rem; color: #1e293b; }
+#modal-id { display: inline-block; font-size: 0.85rem; font-weight: 700; color: var(--card-accent); background: #e2e8f0; padding: 2px 10px; border-radius: 10px; margin: 4px 0 10px; }
+#modal-img { width: 140px; height: 140px; object-fit: contain; margin: 6px auto 12px; display: block; filter: drop-shadow(0 8px 12px rgba(0,0,0,0.3)); }
+
+.modal-info { background: #f8fafc; border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; border: 1px solid #e2e8f0; font-size: 0.88rem; color: #334155; text-align: left; }
+.modal-info p { display: flex; justify-content: space-between; margin-bottom: 4px; }
+
+.modal-stats { text-align: left; }
+.modal-stats h3 { font-size: 0.95rem; color: #1e293b; margin-bottom: 8px; border-bottom: 2px solid var(--card-accent); padding-bottom: 3px; display: inline-block; }
+.stat-item { display: grid; grid-template-columns: 90px 1fr 35px; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 0.82rem; }
+.stat-name { font-weight: 600; color: #475569; text-transform: capitalize; }
+.stat-bar-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 8px; overflow: hidden; }
+.stat-bar-fill { height: 100%; background: linear-gradient(90deg, var(--card-accent), #38ef7d); border-radius: 8px; transition: width 0.6s ease; }
+.stat-value { font-weight: 700; color: #1e293b; text-align: right; }

@@ -12,12 +12,12 @@ async function loadPokemon(id) {
 loadPokemon(current);
 
 //Navegación 
-document.querySelector(".next").addEventListener("click", ()=>{
+document.querySelector(".b-next").addEventListener("click", ()=>{
     current++;
     loadPokemon(current);
 });
 
-document.querySelector(".prev").addEventListener("click",()=> {
+document.querySelector(".b-prev").addEventListener("click",()=> {
     if (current > 1) current--;
     loadPokemon(current);
-})
+});

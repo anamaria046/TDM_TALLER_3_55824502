@@ -3,20 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="./src/css/styles.css">
     <title>POKEMONES</title>
 </head>
 <body>
-    <div class="poke-card">
-        <img id="pokemon-img" src="#">
+    <!-- Card Principal -->
+    <main class="poke-card">
+        <button id="b-sound" class="b-sound" title="Escuchar sonido" aria-label="Escuchar sonido">🔊</button>
+        <img id="pokemon-img" class="pokemon-img" src="#" alt="Imagen de Pokémon">
         <h1 id="pokemon-name">Nombre</h1>
         <p id="pokemon-id"></p>
 
-        <div class="types">
-
-        </div>
+        <div class="types"></div>
         <button class="b-prev">Anterior</button>
         <button class="b-next">Siguiente</button>
-    </div>
+    </main> 
 
+    <div id="pokemon-modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="close-modal">&times;</span>
+            <h2 id="modal-name"></h2>
+            <img id="modal-img" src="" alt="pokemon grande">
+
+            <p id="modal-id" class="pokemon-id"></p>
+            <div class="modal-info">
+                <p><strong>Altura:</strong> <span id="modal-height"></span>m</p>
+                <p><strong>Peso:</strong> <span id="modal-weight"></span>kg</p>
+                <p><strong>Habilidades:</strong> <span id="modal-abilities"></span></p>
+            </div>
+
+            <div id="modal-stats" class="modal-stats">
+                <h3>Estadísticas</h3>
+                <div id="stats-container"></div>
+            </div>
+        </div>
+    </div>
+        <script type="module" src="./src/main.js"></script>
 </body>
 </html>
+
+
+<!-- Nota: Para la realización de este proyecto se utilizaron herramientas de inteligencia artificial,
+    específicamente Gemini,CHAT GPT y Kimi, como apoyo puntual durante el desarrollo. Estas herramientas fueron
+    empleadas principalmente para la generación y ajuste de parte del código CSS, así como para resolver
+    algunas dudas, proponer mejoras y facilitar la comprensión de determinados elementos del código. 
+    La IA se utilizó únicamente como recurso de apoyo y no como fuente principal para la elaboración del proyecto.-->
